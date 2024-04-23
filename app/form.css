@@ -1,0 +1,3 @@
+.step-item:not(:first-child):before {
+  @apply bg-slate-400;
+}
