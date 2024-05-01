@@ -5,7 +5,7 @@ export const FormDataSchema = z.object({
     .string()
     .trim()
     .min(5, "First name is required minimum of 5 letters"),
-  lastName: z.string().trim().min(1, "Last name is required").optional(),
+  lastName: z.string().trim().min(1, "Last name is required"),
   email: z
     .string()
     .trim()
@@ -19,11 +19,15 @@ export const FormDataSchema = z.object({
     .string()
     .trim()
     .min(1, "Zip is required")
-    .regex(new RegExp("^[0-9]{5}(?:-[0-9]{4})?$"), "InValid Zip Code"),
+    .regex(
+      new RegExp("^[0-9]{6}(?:-[0-9]{4})?$"),
+      "InValid Zip Code should of 6 digit long"
+    ),
   companyName: z.string().trim().min(1, "Company Name is required"),
   phoneNumber: z
     .string()
     .trim()
     .min(1, "Phone Number is Required")
+    .max(10, "Phone Number should 10 digit long only")
     .regex(new RegExp("^\\d{10}$"), "Invalid Phone number"),
 });

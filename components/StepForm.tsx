@@ -1,24 +1,48 @@
 "use client";
-import React, { FormEvent, useEffect, useState } from "react";
+
+//Library
+import React, { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { z } from "zod";
+
+//UI
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
-import { motion } from "framer-motion";
-import { z } from "zod";
+
+//Form Schema
 import { FormDataSchema } from "@/lib/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+
+//Constant
 import { stepList } from "@/constant";
 
+//Input field type
 export type Inputs = z.infer<typeof FormDataSchema>;
-type ErrorData = {
-  fieldName?: keyof Inputs;
-  error?: string;
+type FieldName = keyof Inputs;
+
+//Error list item type
+interface ErrorListItem {
+  fieldName: keyof Inputs;
+  error: string;
+}
+
+//Error list
+interface ErrorListType {
+  error?: ErrorListItem[];
   data?: Inputs;
-  success?: string;
-};
+}
 
 export default function StepForm() {
+  // all the state
+  const [currentStep, setCurrentStep] = useState(0);
+  const [previousStep, setPreviousStep] = useState(0);
+  const [prevCurrent, setPrevCurrent] = useState(0);
+  const delta = currentStep - previousStep;
+  const [serverError, setServerError] = useState<ErrorListType>({});
+
+  // Form
   const {
     register,
     handleSubmit,
@@ -30,31 +54,29 @@ export default function StepForm() {
   } = useForm<Inputs>({
     resolver: zodResolver(FormDataSchema),
   });
-  const [currentStep, setCurrentStep] = useState(0);
-  const [previousStep, setPreviousStep] = useState(0);
-  const delta = currentStep - previousStep;
-  const [errorServer, setErrorServer] = useState<ErrorData>({});
 
+  //Submit function
   const processForm: SubmitHandler<Inputs> = async (data) => {
     const serverData = await fetch("/api", {
       method: "POST",
       body: JSON.stringify(data),
       cache: "no-store",
     }).then((res) => res.json());
+
+    // console.log("server data", serverData);   // Need to remove
     if (serverData.error) {
-      setErrorServer(serverData);
+      setServerError(serverData);
     }
     if (serverData.success) {
-      console.log("from of form server", serverData);
-
-      setErrorServer(serverData);
+      // console.log("from of form server", serverData); // Need to remove
+      alert(JSON.stringify(serverData));
+      setServerError({});
       setCurrentStep(0);
+      setPrevCurrent(0);
       setPreviousStep(0);
       reset();
     }
   };
-
-  type FieldName = keyof Inputs;
 
   const next = async () => {
     const fields = stepList[currentStep].fields;
@@ -68,8 +90,10 @@ export default function StepForm() {
         await handleSubmit(processForm)();
       } else {
         setPreviousStep(currentStep);
+        setPrevCurrent((step) => step + 1);
         setCurrentStep((step) => step + 1);
       }
+
       console.log("out server", currentStep, previousStep);
     }
   };
@@ -82,34 +106,44 @@ export default function StepForm() {
   };
 
   useEffect(() => {
-    if (errorServer.error) {
-      console.log("in error", errorServer.error);
+    if (serverError.error) {
+      console.log("in error", serverError);
       stepList.map((step, index) => {
         if (step.fields) {
           step.fields.map((f, i) => {
-            if (f == errorServer.fieldName) {
-              setCurrentStep(index);
-              setPreviousStep(index - 1);
-              setFocus(errorServer.fieldName!);
-              setError(errorServer.fieldName, {
-                type: "",
-                message: errorServer.error,
-              });
-            }
+            serverError.error?.map((ef, eindex) => {
+              if (f == ef.fieldName) {
+                if (eindex == 0) {
+                  setCurrentStep(index);
+                }
+                setPreviousStep(index - 1);
+                setFocus(ef.fieldName!);
+                setError(ef.fieldName, {
+                  type: "",
+                  message: ef.error,
+                });
+              }
+            });
           });
         }
       });
     }
-  }, [setError, errorServer]);
+  }, [setError, serverError, setFocus]);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-neutral-300 to-stone-400">
       <div className="w-2/3 shadow-lg h-[700px] backdrop-blur-md bg-white/60 rounded-sm">
-        <div className="flex justify-between p-10">
+        <div className="flex overflow-y-hidden  justify-between p-10">
           {stepList.map((step, i) => {
             return (
               <div
                 key={step.id}
-                className="step-item flex flex-col justify-center items-center w-36 relative before:absolute before:h-[3px] before:w-full before:top-1/3 before:-translate-y-2/4 before:right-full "
+                className="step-item cursor-pointer flex flex-col justify-center items-center w-36 relative before:absolute before:h-[3px] before:w-full before:top-1/3 before:-translate-y-2/4 before:right-full "
+                onClick={() => {
+                  if (i <= prevCurrent) {
+                    setCurrentStep(i);
+                    setPreviousStep(i - 1);
+                  }
+                }}
               >
                 <span
                   className={cn(
@@ -132,7 +166,7 @@ export default function StepForm() {
             );
           })}
         </div>
-        <div className="p-10">
+        <div className="px-10 h-2/3">
           <form className="" onSubmit={handleSubmit(processForm)}>
             {currentStep === 0 && (
               <motion.div
@@ -245,11 +279,12 @@ export default function StepForm() {
                         id="country"
                         {...register("country")}
                         autoComplete="country-name"
+                        defaultValue={"india"}
                         className="block w-full rounded-md border-0 p-1 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs sm:text-sm sm:leading-6"
                       >
                         <option value={"india"}>India</option>
                         <option value={"canada"}>Canada</option>
-                        <option value={"mexico"}>Mexico</option>
+                        {/* <option value={"mexico"}>Mexico</option> */}
                       </select>
                       {errors.country?.message && (
                         <p className="mt-2 text-sm text-red-400">
@@ -453,7 +488,7 @@ export default function StepForm() {
           </form>
         </div>
         {/* Navigation */}
-        <div className="mt-8 pt-5">
+        <div className="mt-4 pt-5">
           <div className="flex justify-around">
             <Button
               type="button"
