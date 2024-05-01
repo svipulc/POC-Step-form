@@ -23,7 +23,7 @@ export type Inputs = z.infer<typeof FormDataSchema>;
 type FieldName = keyof Inputs;
 
 //Error list item type
-interface ErrorListItem {
+export interface ErrorListItem {
   fieldName: keyof Inputs;
   error: string;
 }
@@ -63,12 +63,10 @@ export default function StepForm() {
       cache: "no-store",
     }).then((res) => res.json());
 
-    // console.log("server data", serverData);   // Need to remove
     if (serverData.error) {
       setServerError(serverData);
     }
     if (serverData.success) {
-      // console.log("from of form server", serverData); // Need to remove
       alert(JSON.stringify(serverData));
       setServerError({});
       setCurrentStep(0);
@@ -86,15 +84,12 @@ export default function StepForm() {
 
     if (currentStep < stepList.length) {
       if (currentStep === stepList.length - 1) {
-        console.log("checking on server");
         await handleSubmit(processForm)();
       } else {
         setPreviousStep(currentStep);
         setPrevCurrent((step) => step + 1);
         setCurrentStep((step) => step + 1);
       }
-
-      console.log("out server", currentStep, previousStep);
     }
   };
 
@@ -107,7 +102,6 @@ export default function StepForm() {
 
   useEffect(() => {
     if (serverError.error) {
-      console.log("in error", serverError);
       stepList.map((step, index) => {
         if (step.fields) {
           step.fields.map((f, i) => {

@@ -1,23 +1,18 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { Inputs } from "@/components/StepForm";
+import { ErrorListItem, Inputs } from "@/components/StepForm";
 import { FormDataSchema } from "@/lib/schema";
 
 const CityList = ["ahmadabad", "rajkot", "jamnagar", "bhavnagar"];
 const PhoneList = ["9151626204", "1948215360", "4681307035", "7235311701"];
 const EmailList = ["asdf@gmail.com", "abcd@gmail.com"];
 
-interface ErrorListItem {
-  fieldName: string;
-  error: string;
-}
-
 export async function POST(request: Request) {
   const data: Inputs = await request.json();
   const errorList: ErrorListItem[] = [];
   const checkedData = FormDataSchema.safeParse(data);
-  console.log("backend", checkedData);
+
   if (checkedData.success) {
     if (EmailList.includes(checkedData.data.email) == true) {
       errorList.push({
@@ -31,7 +26,6 @@ export async function POST(request: Request) {
       // });
     }
     if (CityList.includes(checkedData.data.city.toLowerCase()) == false) {
-      console.log("not in list");
       errorList.push({
         fieldName: "city",
         error: "Invalid city name",
@@ -41,14 +35,8 @@ export async function POST(request: Request) {
       //   error: "Invalid city name",
       //   data: checkedData,
       // });
-    } else if (checkedData.data.city in CityList) {
-      console.log("in list");
     }
     if (PhoneList.includes(checkedData.data.phoneNumber) === true) {
-      console.log(
-        "phone error",
-        PhoneList.includes(checkedData.data.phoneNumber)
-      );
       errorList.push({
         fieldName: "phoneNumber",
         error: "Phone number all ready in use.Try another.",
@@ -60,32 +48,22 @@ export async function POST(request: Request) {
       // });
     }
   }
+  // returning a list of error
 
   if (errorList.length > 0) {
-    console.log("errorlist", errorList);
     return NextResponse.json({
       error: errorList,
       data: checkedData,
     });
   }
+
   return NextResponse.json({
     checkedData,
     success: "Ok",
   });
 }
 
-// {
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   country: string;
-//   street: string;
-//   city: string;
-//   state: string;
-//   zip: string;
-//   companyName: string;
-//   phoneNumber: string;
-// }
+// can implement
 
 /**
  * validation is required for following field:
@@ -98,16 +76,9 @@ export async function POST(request: Request) {
  * 6) zip check from valid list of zip code.
  * 7) phoneNumber is already used send new phone number to add
  *
- * errorList= [
- * {
- *  fieldName:string,
- *  errorMessage:string
- * }
- * ]
- *
- *
- *
  */
+
+// general Structure of address
 
 // export const CountryWiseList = [
 //   {
