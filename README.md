@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# POC: Step Form
 
-## Getting Started
+A multi-step form is a longer form broken up into shorter, less daunting steps. From the marketer’s point of view, it’s great for any situation in which you want to collect detailed prospect information because it does so in small chunks. From the prospect’s point of view, multi-step forms allow them to demonstrate their interest by completing a short form, then proceeding to additional form fields to share more about themselves and/or their businesses.
 
-First, run the development server:
+Now in this poc we will try to implement using **NextJs v14** and **React hook form** get ready to deep dive into it.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Table of content
+
+- Install Dependancy
+- About React hook form and function.
+- Code Explanation
+
+### Install Dependancy
+
+To install all the required dependancy for project is all written in package.json file but to install in your local system you have to first create clone and and write small code to make up running project in you system follow the below given step.
+
+**Firstly**, We have to create clone of this projec to do that go to you VS Code Editor run the following code:
+
+```
+git clone https://github.com/svipulc/step-form.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Moving forward now after cloning the project in you local system. We need install all required dependancy for this project to do that write following code in your terminal of vs code and it will automatically all the depandancy of this project.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Now the exiting part comes here to run project write simple and small code and i am sure you got this
 
-## Learn More
+```
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Above run project on development environment on [Open in Browser](http://localhost:3000)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### About React Hook Form and Function
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+React Hook Form is one such library that helps to manage complex forms. It has excellent performance, is super lightweight, has zero dependencies, can be easily integrated with different React UI frameworks like Material, Antd, and provides an intuitive API and excellent developer experience.
 
-## Deploy on Vercel
+#### Function use in Project
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **useForm :** useForm is a custom hook for managing forms with ease. It takes one object as optional argument. The following example demonstrates all of its properties along with their default values.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **register :** This method allows you to register an input or select element and apply validation rules to React Hook Form. Validation rules are all based on the HTML standard and also allow for custom validation methods.
+
+- **tigger :** Manually triggers form or input validation. This method is also useful when you have dependant validation (input validation depends on another input's value).
+
+- **setFocus :** This method will allow users to programmatically focus on input. Make sure input's ref is registered into the hook form.
+
+- **setError :** The function allows you to manually set one or more errors.
