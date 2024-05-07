@@ -4,6 +4,8 @@ A multi-step form is a longer form broken up into shorter, less daunting steps. 
 
 Now in this poc we will try to implement using **NextJs v14** and **React hook form** get ready to deep dive into it.
 
+Demo Link : [Click Me](https://step-form-sigma.vercel.app/)
+
 ## Table of content
 
 - Install Dependency.
@@ -96,4 +98,10 @@ In this step form we have put some basic feature that an general step form requi
 
   In above code we have use stepList has array of field in each step using that we have to find the field on which error occur and using `setCurrentStep` redirect user to step , then `setFocus` to set focus on input field and then using `setError` we are setting error form server.
 
-#
+### Demo Test Instruction
+
+When you are testing the demo project after the setup I request use following Input for test working of project
+
+- If you want to test email is register error use this list of email "asdf@gmail.com", "abcd@gmail.com"
+- similarly with phone number: "9151626204", "1948215360", "4681307035", "7235311701"
+- In City i have put some city are "ahmadabad", "rajkot", "jamnagar", "bhavnagar"
