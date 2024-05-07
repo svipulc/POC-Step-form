@@ -98,7 +98,7 @@ In this step form we have put some basic feature that an general step form requi
 
   In above code we have use stepList has array of field in each step using that we have to find the field on which error occur and using `setCurrentStep` redirect user to step , then `setFocus` to set focus on input field and then using `setError` we are setting error form server.
 
-### Demo Test Instruction
+### Demo Testing Instruction
 
 When you are testing the demo project after the setup I request use following Input for test working of project
 
