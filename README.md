@@ -96,7 +96,7 @@ In this step form we have put some basic feature that an general step form requi
   }, [setError, serverError, setFocus]);
   ```
 
-  In above code we have use stepList has array of field in each step using that we have to find the field on which error occur and using `setCurrentStep` redirect user to step , then `setFocus` to set focus on input field and then using `setError` we are setting error form server.
+  In above code we have use stepList has array of field in each step using that we have to find the field on which error occur and using `setCurrentStep` redirect user to step , then `setFocus` to set focus on input field and then using `setError` we are setting error from server.
 
 ### Demo Testing Instruction
 
