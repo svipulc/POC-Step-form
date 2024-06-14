@@ -2,7 +2,7 @@ export const stepList = [
   {
     id: "Step 1",
     name: "Personal Information",
-    fields: ["firstName", "lastName", "email"],
+    fields: ["firstName", "lastName", "email", "imgUrl"],
   },
   {
     id: "Step 2",

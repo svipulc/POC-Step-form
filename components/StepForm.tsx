@@ -17,6 +17,7 @@ import { FormDataSchema } from "@/lib/schema";
 
 //Constant
 import { stepList } from "@/constant";
+import ImageUploadField from "./imageUploadField";
 
 //Input field type
 export type Inputs = z.infer<typeof FormDataSchema>;
@@ -43,6 +44,9 @@ export default function StepForm() {
   const [serverError, setServerError] = useState<ErrorListType>({});
 
   // Form
+  const form = useForm<Inputs>({
+    resolver: zodResolver(FormDataSchema),
+  });
   const {
     register,
     handleSubmit,
@@ -51,9 +55,7 @@ export default function StepForm() {
     setFocus,
     setError,
     formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(FormDataSchema),
-  });
+  } = form;
 
   //Submit function
   const processForm: SubmitHandler<Inputs> = async (data) => {
@@ -145,11 +147,11 @@ export default function StepForm() {
                     {
                       "bg-slate-900 text-white": currentStep == i,
                       "bg-green-500":
-                        i < currentStep || currentStep == stepList.length - 1,
+                        i < currentStep || currentStep == stepList.length,
                     }
                   )}
                 >
-                  {i < currentStep || currentStep == stepList.length - 1 ? (
+                  {i < currentStep || currentStep == stepList.length ? (
                     <Check className="text-white" />
                   ) : (
                     i + 1
@@ -197,7 +199,10 @@ export default function StepForm() {
                       )}
                     </div>
                   </div>
-
+                  {/* image upload */}
+                  <div className="sm:col-span-3">
+                    <ImageUploadField form={form} />
+                  </div>
                   <div className="sm:col-span-3">
                     <label
                       htmlFor="lastName"
@@ -471,10 +476,10 @@ export default function StepForm() {
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
                   <h2 className="text-base font-semibold leading-7 text-gray-900">
-                    Complete
+                    One Last Thing is Remaining
                   </h2>
                   <p className="mt-1 text-sm leading-6 text-gray-600">
-                    Thank you for your submission.
+                    Click on Finish Button to submit this form
                   </p>
                 </motion.div>
               </>

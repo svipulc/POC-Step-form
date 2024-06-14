@@ -6,6 +6,7 @@ export const FormDataSchema = z.object({
     .trim()
     .min(5, "First name is required minimum of 5 letters"),
   lastName: z.string().trim().min(1, "Last name is required"),
+  imgUrl: z.string().min(1, "Image required"),
   email: z
     .string()
     .trim()
